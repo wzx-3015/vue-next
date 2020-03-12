@@ -41,9 +41,14 @@ const canObserve = (value: any): boolean => {
 // only unwrap nested ref
 type UnwrapNestedRefs<T> = T extends Ref ? T : UnwrapRef<T>
 
+/* 
+ * vue 核心功能
+ * 数据双向绑定源码
+*/
 export function reactive<T extends object>(target: T): UnwrapNestedRefs<T>
 export function reactive(target: object) {
   // if trying to observe a readonly proxy, return the readonly version.
+  // 判断是否为只读
   if (readonlyToRaw.has(target)) {
     return target
   }
@@ -76,7 +81,6 @@ export function readonly<T extends object>(
     readonlyCollectionHandlers
   )
 }
-
 function createReactiveObject(
   target: any,
   toProxy: WeakMap<any, any>,
@@ -84,6 +88,7 @@ function createReactiveObject(
   baseHandlers: ProxyHandler<any>,
   collectionHandlers: ProxyHandler<any>
 ) {
+  // 判断目标值是否是对象
   if (!isObject(target)) {
     if (__DEV__) {
       console.warn(`value cannot be made reactive: ${String(target)}`)
